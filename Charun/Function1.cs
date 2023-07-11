@@ -4,22 +4,22 @@ using Microsoft.Extensions.Logging;
 
 namespace Charun
 {
-    public class Function1
-    {
-        private readonly ILogger _logger;
+    //public class Function1
+    //{
+    //    private readonly ILogger _logger;
 
-        public Function1(ILoggerFactory loggerFactory)
-        {
-            _logger = loggerFactory.CreateLogger<Function1>();
-        }
+    //    public Function1(ILoggerFactory loggerFactory)
+    //    {
+    //        _logger = loggerFactory.CreateLogger<Function1>();
+    //    }
 
-        [Function("Function1")]
-        public void Run([TimerTrigger("0 */5 * * * *")] MyInfo myTimer)
-        {
-            _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
-            _logger.LogInformation($"Next timer schedule at: {myTimer.ScheduleStatus.Next}");
-        }
-    }
+    //    [Function("Function1")]
+    //    public void Run([TimerTrigger("0 */5 * * * *")] MyInfo myTimer)
+    //    {
+    //        _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
+    //        _logger.LogInformation($"Next timer schedule at: {myTimer.ScheduleStatus.Next}");
+    //    }
+    //}
 
     public class MyInfo
     {
