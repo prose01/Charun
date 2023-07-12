@@ -12,7 +12,28 @@ namespace Charun.Data
         public ProfilesQueryRepository(IOptions<Settings> settings) {
             _context = new Context(settings);
         }
-       
+
+        /// <summary>Gets the profile by identifier.</summary>
+        /// <param name="profileId">The profile identifier.</param>
+        /// <returns></returns>
+        public async Task<Profile> GetProfileById(string profileId)
+        {
+            try
+            {
+                var filter = Builders<Profile>
+                                .Filter.Eq(p => p.ProfileId, profileId);
+
+                return await _context.Profiles
+                    .Find(filter)
+                    .Project<Profile>(this.GetProjection())
+                    .FirstOrDefaultAsync();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
 
         /// <summary>Gets XX old profiles (limit) that are more than XX days (daysBack) since last active.</summary>
         /// <returns></returns>

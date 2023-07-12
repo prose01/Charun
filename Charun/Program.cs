@@ -1,4 +1,5 @@
 using Charun.Data;
+using Charun.Helpers;
 using Charun.Interfaces;
 using Charun.Model;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,7 @@ var host = new HostBuilder()
         services.AddOptions<Settings>().Configure<IConfiguration>((settings, configuration) => configuration.GetSection("Configs").Bind(settings));
         services.AddSingleton<Context, Context>();
         services.AddSingleton<IProfilesQueryRepository, ProfilesQueryRepository>();
+        services.AddSingleton<IHelperMethods, HelperMethods>();
     })
     .Build();
 

@@ -12,12 +12,14 @@ namespace Charun
         private readonly ILogger _logger;
         private readonly IOptions<Settings> _settings;
         private readonly IProfilesQueryRepository _profilesQueryRepository;
+        private readonly IHelperMethods _helper;
 
-        public AvalonCleanUpJobs(ILogger<AvalonCleanUpJobs> logger, IOptions<Settings> settings, IProfilesQueryRepository profilesQueryRepository)
+        public AvalonCleanUpJobs(ILogger<AvalonCleanUpJobs> logger, IOptions<Settings> settings, IProfilesQueryRepository profilesQueryRepository, IHelperMethods helper)
         {
             _logger = logger;
             _settings = settings;
             _profilesQueryRepository = profilesQueryRepository;
+            _helper = helper;
         }
 
         [Function("DeleteOldProfiles")]

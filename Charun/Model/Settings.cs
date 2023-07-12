@@ -11,5 +11,6 @@
         public string Client_secret { get; set; }
         public int DeleteProfileLimit { get; set;}
         public int DeleteProfileDaysBack { get; set; }
+        public int DeleteFeedbacksOlderThanYear { get;set; }
     }
 }
