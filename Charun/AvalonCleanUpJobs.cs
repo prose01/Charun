@@ -1,4 +1,5 @@
-﻿using Charun.Interfaces;
+﻿using Charun.Data;
+using Charun.Interfaces;
 using Charun.Model;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -12,13 +13,17 @@ namespace Charun
         private readonly ILogger _logger;
         private readonly IOptions<Settings> _settings;
         private readonly IProfilesQueryRepository _profilesQueryRepository;
+        private readonly IFeedbackRepository _feedbackRepository;
+        private readonly IImageUtil _imageUtil;
         private readonly IHelperMethods _helper;
 
-        public AvalonCleanUpJobs(ILogger<AvalonCleanUpJobs> logger, IOptions<Settings> settings, IProfilesQueryRepository profilesQueryRepository, IHelperMethods helper)
+        public AvalonCleanUpJobs(ILogger<AvalonCleanUpJobs> logger, IOptions<Settings> settings, IProfilesQueryRepository profilesQueryRepository, IFeedbackRepository feedbackRepository, IImageUtil imageUtil, IHelperMethods helper)
         {
             _logger = logger;
             _settings = settings;
             _profilesQueryRepository = profilesQueryRepository;
+            _feedbackRepository = feedbackRepository;
+            _imageUtil = imageUtil;
             _helper = helper;
         }
 
@@ -36,8 +41,22 @@ namespace Charun
                 {
                     _logger.LogInformation($"DeleteOldProfiles - deleting this profile : {profile.Name}");
                     //await _helper.DeleteProfileFromAuth0(profile.ProfileId);
+                    //await _imageUtil.DeleteAllImagesForProfile(profile.ProfileId);
                     //await _profilesQueryRepository.DeleteProfile(profile.ProfileId);
                 }
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation($"We had an error : {e}");
+            }
+        }
+
+        [Function("DeleteOldFeedbacks")]
+        public async Task DeleteOldFeedbacks([TimerTrigger("0 */2 * * * *")] MyInfo myTimer)
+        {
+            try
+            {
+                //await _feedbackRepository.DeleteOldFeedbacks();
             }
             catch (Exception e)
             {

@@ -36,12 +36,30 @@ namespace Charun.Data
 
 
         /// <summary>Gets XX old profiles (limit) that are more than XX days (daysBack) since last active.</summary>
+        /// <param name="daysBack">The days back since last active..</param>
+        /// <param name="limit">The limit.</param>
         /// <returns></returns>
         public async Task<IEnumerable<Profile>> GetOldProfiles(int daysBack, int limit)
         {
             try
             {
                 return await _context.Profiles.Find(p => p.LastActive < DateTime.UtcNow.AddDays(-daysBack) && !p.Admin).Project<Profile>(this.GetProjection()).Limit(limit).ToListAsync();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        /// <summary>Delete the profile. There is no going back!</summary>
+        /// <param name="profileIds">The profile identifier.</param>
+        /// <returns></returns>
+        public async Task<DeleteResult> DeleteProfile(string profileId)
+        {
+            try
+            {
+                return await _context.Profiles.DeleteOneAsync(
+                    Builders<Profile>.Filter.Eq("ProfileId", profileId));
             }
             catch
             {

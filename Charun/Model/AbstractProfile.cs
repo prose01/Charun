@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Charun.Model
 {
-    [BsonKnownTypes(typeof(CurrentUser), typeof(Profile))]
+    [BsonKnownTypes(typeof(Profile))]
     public abstract class AbstractProfile
     {
         [BsonId]

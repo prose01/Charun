@@ -14,6 +14,9 @@ var host = new HostBuilder()
         services.AddOptions<Settings>().Configure<IConfiguration>((settings, configuration) => configuration.GetSection("Configs").Bind(settings));
         services.AddSingleton<Context, Context>();
         services.AddSingleton<IProfilesQueryRepository, ProfilesQueryRepository>();
+        services.AddSingleton<IFeedbackRepository, FeedbackRepository>();
+        services.AddSingleton<IJunoRepository, JunoRepository>();
+        services.AddSingleton<IImageUtil, ImageUtil>();
         services.AddSingleton<IHelperMethods, HelperMethods>();
     })
     .Build();
