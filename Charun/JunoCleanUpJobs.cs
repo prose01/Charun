@@ -17,25 +17,35 @@ namespace Charun
             _helper = helper;
         }
 
-        [Function("DeleteOldMessages")]
-        public async Task DeleteOldMessages([TimerTrigger("0 */2 * * * *")] MyInfo myTimer)
-        {
-            try
-            {
-                //await _junoRepository.DeleteOldMessages();
-            }
-            catch (Exception e)
-            {
-                _logger.LogInformation($"We had an error : {e}");
-            }
-        }
+        //[Function("DeleteOldMessages")]
+        //public async Task DeleteOldMessages([TimerTrigger("0 */2 * * * *")] MyInfo myTimer)
+        //{
+        //    try
+        //    {
+        //        var items = await _junoRepository.ViewDeleteOldMessages();
+
+        //        foreach (var item in items)
+        //        {
+        //            _logger.LogInformation($"DeleteOldMessages - deleting this feedback : {item._id}");
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        _logger.LogInformation($"We had an error : {e}");
+        //    }
+        //}
 
         //[Function("DeleteEmptyGroups")]
         //public async Task DeleteEmptyGroups([TimerTrigger("0 */2 * * * *")] MyInfo myTimer) // TODO: Last one closes the group
         //{
         //    try
         //    {
-        //        //await _junoRepository.DeleteEmptyGroups();
+        //        var items = await _junoRepository.ViewDeleteEmptyGroups();
+
+        //        foreach (var item in items)
+        //        {
+        //            _logger.LogInformation($"DeleteEmptyGroups - deleting this feedback : {item.GroupId}");
+        //        }
         //    }
         //    catch (Exception e)
         //    {
@@ -48,7 +58,12 @@ namespace Charun
         {
             try
             {
-                //await _junoRepository.DeleteNoActivityGroups();
+                var items = await _junoRepository.ViewDeleteNoActivityGroups();
+
+                foreach (var item in items)
+                {
+                    _logger.LogInformation($"DeleteNoActivityGroups - deleting this feedback : {item.GroupId}");
+                }
             }
             catch (Exception e)
             {

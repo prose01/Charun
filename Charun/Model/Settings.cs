@@ -13,6 +13,7 @@
         public int DeleteProfileDaysBack { get; set; }
         public int DeleteFeedbacksOlderThanYear { get;set; }
         public int DeleteMessagesOlderThan { get; set; }
+        public int DeleteGroupsOlderThan { get; set; }
         public string Storage_ConnectionString { get; set; }
     }
 }

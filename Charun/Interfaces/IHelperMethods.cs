@@ -1,7 +1,9 @@
-﻿namespace Charun.Interfaces
+﻿using Charun.Model;
+
+namespace Charun.Interfaces
 {
     public interface IHelperMethods
     {
-        Task DeleteProfileFromAuth0(string profileId);
+        Task DeleteProfileFromAuth0(Profile profile);
     }
 }

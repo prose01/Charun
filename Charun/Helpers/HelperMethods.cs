@@ -8,30 +8,26 @@ namespace Charun.Helpers
 {
     public class HelperMethods : IHelperMethods
     {
-        private readonly IProfilesQueryRepository _profilesQueryRepository;
         private readonly string _auth0ApiIdentifier;
         private readonly string _auth0TokenAddress;
         private readonly string _auth0_Client_id;
         private readonly string _auth0_Client_secret;
         private string token;
 
-        public HelperMethods(IOptions<Settings> settings, IProfilesQueryRepository profilesQueryRepository)
+        public HelperMethods(IOptions<Settings> settings)
         {
             _auth0ApiIdentifier = settings.Value.Auth0ApiIdentifier;
             _auth0TokenAddress = settings.Value.Auth0TokenAddress;
             _auth0_Client_id = settings.Value.Client_id;
             _auth0_Client_secret = settings.Value.Client_secret;
-            _profilesQueryRepository = profilesQueryRepository;
         }
 
         /// <summary>Deletes the profile from Auth0. There is no going back!</summary>
         /// <param name="profileId">The profile identifier.</param>
-        public async Task DeleteProfileFromAuth0(string profileId)      // TODO: Check that this still works after upgrading to RestSharp v107 https://restsharp.dev/v107/#restsharp-v107
+        public async Task DeleteProfileFromAuth0(Profile profile)      // TODO: Check that this still works after upgrading to RestSharp v107 https://restsharp.dev/v107/#restsharp-v107
         {
             try
             {
-                var profile = await _profilesQueryRepository.GetProfileById(profileId);
-
                 if (profile == null) return;
 
                 var accessToken = string.IsNullOrEmpty(token) ? await GetAuth0Token() : token;

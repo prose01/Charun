@@ -37,5 +37,28 @@ namespace Charun.Data
                 throw;
             }
         }
+
+        /// <summary>Deletes Feedbacks that are greater  than 1 year old (DateSeen) and closed.</summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<Feedback>> ViewDeleteOldFeedbacks()
+        {
+            try
+            {
+                List<FilterDefinition<Feedback>> filters = new List<FilterDefinition<Feedback>>();
+
+                filters.Add(Builders<Feedback>.Filter.Gt(f => f.DateSeen, DateTime.UtcNow.AddYears(-_deleteFeedbacksOlderThanYear)));
+
+                filters.Add(Builders<Feedback>.Filter.Eq(f => f.Open, false));
+
+                var combineFilters = Builders<Feedback>.Filter.And(filters);
+
+                return await _context.Feedbacks
+                            .Find(combineFilters).ToListAsync();
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }

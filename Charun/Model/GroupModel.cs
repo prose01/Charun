@@ -23,5 +23,7 @@ namespace Charun.Model
         public string Countrycode { internal get; set; }
 
         public List<GroupMember> GroupMemberslist { get; set; }
+
+        public List<MessageModel> Matching { get; set; }
     }
 }
