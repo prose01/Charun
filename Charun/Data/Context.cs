@@ -1,5 +1,4 @@
 ﻿using Charun.Model;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace Charun.Data
@@ -8,14 +7,13 @@ namespace Charun.Data
     {
         private readonly IMongoDatabase _database;
 
-        public Context(IOptions<Settings> settings)
+        public Context()
         {
-            var client = new MongoClient(settings.Value.ConnectionString);
+            var client = new MongoClient(Environment.GetEnvironmentVariable("ConnectionString"));
             if (client != null)
-                _database = client.GetDatabase(settings.Value.Database);
+                _database = client.GetDatabase(Environment.GetEnvironmentVariable("Database"));
         }
 
-        //public IMongoCollection<CurrentUser> CurrentUser => _database.GetCollection<CurrentUser>("Profile");
         public IMongoCollection<Profile> Profiles => _database.GetCollection<Profile>("Profile");
 
         public IMongoCollection<Feedback> Feedbacks => _database.GetCollection<Feedback>("Feedback");

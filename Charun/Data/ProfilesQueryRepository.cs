@@ -1,6 +1,5 @@
 ﻿using Charun.Interfaces;
 using Charun.Model;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace Charun.Data
@@ -9,8 +8,8 @@ namespace Charun.Data
     {
         private readonly Context _context = null;
 
-        public ProfilesQueryRepository(IOptions<Settings> settings) {
-            _context = new Context(settings);
+        public ProfilesQueryRepository() {
+            _context = new Context();
         }
 
 

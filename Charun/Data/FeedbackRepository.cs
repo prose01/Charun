@@ -1,6 +1,5 @@
 ﻿using Charun.Interfaces;
 using Charun.Model;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace Charun.Data
@@ -10,10 +9,10 @@ namespace Charun.Data
         private readonly Context _context = null;
         private readonly int _deleteFeedbacksOlderThanYear;
 
-        public FeedbackRepository(IOptions<Settings> settings)
+        public FeedbackRepository()
         {
-            _context = new Context(settings);
-            _deleteFeedbacksOlderThanYear = settings.Value.DeleteFeedbacksOlderThanYear;
+            _context = new Context();
+            _deleteFeedbacksOlderThanYear = int.Parse(Environment.GetEnvironmentVariable("DeleteFeedbacksOlderThanYear"));
         }
 
         /// <summary>Deletes Feedbacks that are greater  than 1 year old (DateSeen) and closed.</summary>
@@ -24,7 +23,7 @@ namespace Charun.Data
             {
                 List<FilterDefinition<Feedback>> filters = new List<FilterDefinition<Feedback>>();
 
-                filters.Add(Builders<Feedback>.Filter.Gt(f => f.DateSeen, DateTime.UtcNow.AddYears(-_deleteFeedbacksOlderThanYear)));
+                filters.Add(Builders<Feedback>.Filter.Lt(f => f.DateSeen, DateTime.UtcNow.AddYears(-_deleteFeedbacksOlderThanYear)));
 
                 filters.Add(Builders<Feedback>.Filter.Eq(f => f.Open, false));
 
@@ -46,7 +45,7 @@ namespace Charun.Data
             {
                 List<FilterDefinition<Feedback>> filters = new List<FilterDefinition<Feedback>>();
 
-                filters.Add(Builders<Feedback>.Filter.Gt(f => f.DateSeen, DateTime.UtcNow.AddYears(-_deleteFeedbacksOlderThanYear)));
+                filters.Add(Builders<Feedback>.Filter.Lt(f => f.DateSeen, DateTime.UtcNow.AddYears(-_deleteFeedbacksOlderThanYear)));
 
                 filters.Add(Builders<Feedback>.Filter.Eq(f => f.Open, false));
 

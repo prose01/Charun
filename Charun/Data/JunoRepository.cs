@@ -1,6 +1,5 @@
 ﻿using Charun.Interfaces;
 using Charun.Model;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace Charun.Data
@@ -11,11 +10,11 @@ namespace Charun.Data
         private readonly int _deleteMessagesOlderThan;
         private readonly int _deleteGroupsOlderThan;
 
-        public JunoRepository(IOptions<Settings> settings)
+        public JunoRepository()
         {
-            _context = new Context(settings);
-            _deleteMessagesOlderThan = settings.Value.DeleteMessagesOlderThan;
-            _deleteGroupsOlderThan = settings.Value.DeleteGroupsOlderThan;
+            _context = new Context();
+            _deleteMessagesOlderThan = int.Parse(Environment.GetEnvironmentVariable("DeleteMessagesOlderThan"));
+            _deleteGroupsOlderThan = int.Parse(Environment.GetEnvironmentVariable("DeleteGroupsOlderThan"));
         }
 
         #region Delete Messages
@@ -28,7 +27,7 @@ namespace Charun.Data
             {
                 List<FilterDefinition<MessageModel>> filters = new List<FilterDefinition<MessageModel>>();
 
-                filters.Add(Builders<MessageModel>.Filter.Gt(m => m.DateSeen, DateTime.Now.AddDays(-_deleteMessagesOlderThan)));
+                filters.Add(Builders<MessageModel>.Filter.Lt(m => m.DateSeen, DateTime.Now.AddDays(-_deleteMessagesOlderThan)));
 
                 filters.Add(Builders<MessageModel>.Filter.Eq(m => m.DoNotDelete, false));
 
@@ -44,29 +43,7 @@ namespace Charun.Data
 
         #endregion
 
-        #region Delete Groups
-
-        /// <summary>Deletes Groups that are more than 30 days old and only 1 member.</summary>
-        /// <returns></returns>
-        public async Task<DeleteResult> DeleteEmptyGroups()
-        {
-            try
-            {
-                List<FilterDefinition<GroupModel>> filters = new List<FilterDefinition<GroupModel>>();
-
-                filters.Add(Builders<GroupModel>.Filter.Gt(g => g.CreatedOn, DateTime.Now.AddDays(-_deleteGroupsOlderThan)));
-
-                filters.Add(Builders<GroupModel>.Filter.Eq(g => g.GroupMemberslist.Count, 1));
-
-                var combineFilters = Builders<GroupModel>.Filter.And(filters);
-
-                return await _context.Groups.DeleteManyAsync(combineFilters);
-            }
-            catch
-            {
-                throw;
-            }
-        }
+        #region Delete Groups4
 
         /// <summary>Deletes Groups that are more than 30 days old and have no messages.</summary>
         /// <returns></returns>
@@ -123,36 +100,13 @@ namespace Charun.Data
             {
                 List<FilterDefinition<MessageModel>> filters = new List<FilterDefinition<MessageModel>>();
 
-                filters.Add(Builders<MessageModel>.Filter.Gt(m => m.DateSeen, DateTime.Now.AddDays(-_deleteMessagesOlderThan)));
+                filters.Add(Builders<MessageModel>.Filter.Lt(m => m.DateSeen, DateTime.Now.AddDays(-_deleteMessagesOlderThan)));
 
                 filters.Add(Builders<MessageModel>.Filter.Eq(m => m.DoNotDelete, false));
 
                 var combineFilters = Builders<MessageModel>.Filter.And(filters);
 
                 return await _context.Messages
-                    .Find(combineFilters).ToListAsync();
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
-        /// <summary>Deletes Groups that are more than 30 days old and only 1 member.</summary>
-        /// <returns></returns>
-        public async Task<IEnumerable<GroupModel>> ViewDeleteEmptyGroups()
-        {
-            try
-            {
-                List<FilterDefinition<GroupModel>> filters = new List<FilterDefinition<GroupModel>>();
-
-                filters.Add(Builders<GroupModel>.Filter.Gt(g => g.CreatedOn, DateTime.Now.AddDays(-_deleteGroupsOlderThan)));
-
-                filters.Add(Builders<GroupModel>.Filter.Eq(g => g.GroupMemberslist.Count, 1));
-
-                var combineFilters = Builders<GroupModel>.Filter.And(filters);
-
-                return await _context.Groups
                     .Find(combineFilters).ToListAsync();
             }
             catch
@@ -184,7 +138,7 @@ namespace Charun.Data
 
                     if (messeges.Count == 0)
                     {
-                        items.Union(await _context.Groups.Find(Builders<GroupModel>.Filter.Eq("GroupId", group.GroupId)).ToListAsync());
+                        items.AddRange(await _context.Groups.Find(Builders<GroupModel>.Filter.Eq("GroupId", group.GroupId)).ToListAsync());
                     }
                 }
 

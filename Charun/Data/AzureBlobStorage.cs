@@ -1,8 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Charun.Interfaces;
-using Charun.Model;
-using Microsoft.Extensions.Options;
 
 namespace Charun.Data
 {
@@ -10,9 +8,9 @@ namespace Charun.Data
     {
         private readonly BlobContainerClient _container;
 
-        public AzureBlobStorage(IOptions<Settings> settings)
+        public AzureBlobStorage()
         {
-            _container = new BlobContainerClient(settings.Value.Storage_ConnectionString, "photos");
+            _container = new BlobContainerClient(Environment.GetEnvironmentVariable("Storage_ConnectionString"), "photos");
         }
 
         public async Task DeleteAllImagesAsync(string profileId)

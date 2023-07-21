@@ -1,6 +1,5 @@
 ﻿using Charun.Interfaces;
 using Charun.Model;
-using Microsoft.Extensions.Options;
 using RestSharp;
 using System.Text.Json;
 
@@ -14,12 +13,12 @@ namespace Charun.Helpers
         private readonly string _auth0_Client_secret;
         private string token;
 
-        public HelperMethods(IOptions<Settings> settings)
+        public HelperMethods()
         {
-            _auth0ApiIdentifier = settings.Value.Auth0ApiIdentifier;
-            _auth0TokenAddress = settings.Value.Auth0TokenAddress;
-            _auth0_Client_id = settings.Value.Client_id;
-            _auth0_Client_secret = settings.Value.Client_secret;
+            _auth0ApiIdentifier = Environment.GetEnvironmentVariable("Auth0ApiIdentifier");
+            _auth0TokenAddress = Environment.GetEnvironmentVariable("Auth0TokenAddress");
+            _auth0_Client_id = Environment.GetEnvironmentVariable("Client_id");
+            _auth0_Client_secret = Environment.GetEnvironmentVariable("Client_secret");
         }
 
         /// <summary>Deletes the profile from Auth0. There is no going back!</summary>
