@@ -9,6 +9,7 @@ namespace Charun.Data
         private readonly Context _context = null;
         private readonly int _deleteMessagesOlderThan;
         private readonly int _deleteGroupsOlderThan;
+        private DeleteResult result;
 
         public JunoRepository()
         {
@@ -47,7 +48,7 @@ namespace Charun.Data
 
         /// <summary>Deletes Groups that are more than 30 days old and have no messages.</summary>
         /// <returns></returns>
-        public async Task DeleteNoActivityGroups()
+        public async Task<DeleteResult> DeleteNoActivityGroups()
         {
             try
             {
@@ -66,9 +67,11 @@ namespace Charun.Data
 
                     if (messeges.Count == 0)
                     {
-                        await _context.Groups.DeleteManyAsync(Builders<GroupModel>.Filter.Eq("GroupId", group.GroupId));
+                        result = await _context.Groups.DeleteManyAsync(Builders<GroupModel>.Filter.Eq("GroupId", group.GroupId));
                     }
                 }
+
+                return result;
             }
             catch
             {

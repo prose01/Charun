@@ -1,4 +1,5 @@
 ﻿using Charun.Interfaces;
+using Charun.Model;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -32,6 +33,7 @@ namespace Charun
 
                 var oldProfiles = await _profilesQueryRepository.GetOldProfiles(_deleteProfileDaysBack, _deleteProfileLimit);
 
+                // Uncomment the awaits and change method call from View... to Delete... Remember to update the TimerTrigger etc. in settings before you start!
                 foreach (var profile in oldProfiles)
                 {
                     _logger.LogInformation($"DeleteOldProfiles - deleting this profile : {profile.ProfileId}");
@@ -51,9 +53,11 @@ namespace Charun
         {
             try
             {
-                var items = await _feedbackRepository.ViewDeleteOldFeedbacks();
+                var result = await _feedbackRepository.ViewDeleteOldFeedbacks();
+                //_logger.LogInformation($"DeleteOldFeedbacks : {result.DeletedCount}");
 
-                foreach (var item in items)
+                // TODO: Delete the following foreach, uncomment the previous _logger and change method call from View... to Delete... Remember to update the TimerTrigger etc. in settings before you start!
+                foreach (var item in result)
                 {
                     _logger.LogInformation($"DeleteOldFeedbacks - deleting this feedback : {item.FeedbackId}");
                 }

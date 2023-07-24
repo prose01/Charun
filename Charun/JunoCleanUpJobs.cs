@@ -1,4 +1,5 @@
 ﻿using Charun.Interfaces;
+using Charun.Model;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
@@ -21,9 +22,11 @@ namespace Charun
         {
             try
             {
-                var items = await _junoRepository.ViewDeleteOldMessages();
+                var result = await _junoRepository.ViewDeleteOldMessages();
+                //_logger.LogInformation($"DeleteOldMessages : {result.DeletedCount}");
 
-                foreach (var item in items)
+                // TODO: Delete the following foreach, uncomment the previous _logger and change method call from View... to Delete... Remember to update the TimerTrigger etc. in settings before you start!
+                foreach (var item in result)
                 {
                     _logger.LogInformation($"DeleteOldMessages - deleting this Message : {item._id}");
                 }
@@ -39,9 +42,11 @@ namespace Charun
         {
             try
             {
-                var items = await _junoRepository.ViewDeleteNoActivityGroups();
+                var result = await _junoRepository.ViewDeleteNoActivityGroups();
+                //_logger.LogInformation($"DeleteNoActivityGroups : {result.DeletedCount}");
 
-                foreach (var item in items)
+                // TODO: Delete the following foreach, uncomment the previous _logger and change method call from View... to Delete... Remember to update the TimerTrigger etc. in settings before you start!
+                foreach (var item in result)
                 {
                     _logger.LogInformation($"DeleteNoActivityGroups - deleting this Group : {item.GroupId}");
                 }
