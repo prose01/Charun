@@ -33,7 +33,7 @@ namespace Charun
 
                 var oldProfiles = await _profilesQueryRepository.GetOldProfiles(_deleteProfileDaysBack, _deleteProfileLimit);
 
-                // Uncomment the awaits and change method call from View... to Delete... Remember to update the TimerTrigger etc. in settings before you start!
+                // TODO: Uncomment the awaits and change method call from View... to Delete... Remember to update the TimerTrigger etc. in settings before you start!
                 foreach (var profile in oldProfiles)
                 {
                     _logger.LogInformation($"DeleteOldProfiles - deleting this profile : {profile.ProfileId}");
